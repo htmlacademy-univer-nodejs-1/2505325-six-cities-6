@@ -56,7 +56,7 @@ export class ImportCommand implements CommandInterface {
         }
       }
 
-      console.log(chalk.green(`Import completed successfully!`));
+      console.log(chalk.green('Import completed successfully!'));
       console.log(chalk.green(`Total records imported: ${importedCount}`));
       if (errorCount > 0) {
         console.log(chalk.yellow(`Errors encountered: ${errorCount}`));
