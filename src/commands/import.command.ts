@@ -19,9 +19,9 @@ export class ImportCommand implements CommandInterface {
 
     try {
       const fileReader = new TSVFileReader(filename.trim());
-      
+
       console.log(chalk.blue(`Starting import from: ${filename}`));
-      
+
       let importedCount = 0;
       let errorCount = 0;
 
@@ -46,7 +46,7 @@ export class ImportCommand implements CommandInterface {
         try {
           fileReader.parseLine(line);
           importedCount++;
-          
+
           if (importedCount % 1000 === 0) {
             console.log(chalk.green(`Imported ${importedCount} records...`));
           }
