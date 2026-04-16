@@ -33,7 +33,7 @@ export class OfferModel extends defaultClasses.TimeStamps {
   @prop({ required: true })
   public isPremium!: boolean;
 
-  @prop({ required: true })
+  @prop({ required: true, default: false })
   public isFavorite!: boolean;
 
   @prop({ required: true, min: 1, max: 5 })
@@ -62,6 +62,9 @@ export class OfferModel extends defaultClasses.TimeStamps {
 
   @prop({ required: true, _id: false, type: () => Object })
   public coordinates!: Coordinates;
+
+  @prop({ required: false, ref: () => UserModel, type: [Types.ObjectId] })
+  public favoriteUsers?: Types.ObjectId[];
 }
 
 export const OfferEntity = getModelForClass(OfferModel);
