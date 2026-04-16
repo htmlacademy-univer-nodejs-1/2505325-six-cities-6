@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { UserModel, UserEntity } from '../models/user.model.js';
 import { UserServiceInterface } from './database-service.interface.js';
+import { CreateUserDto } from '../../../shared/dto/create-user.dto.js';
 
 @injectable()
 export class UserService implements UserServiceInterface {
@@ -12,8 +13,20 @@ export class UserService implements UserServiceInterface {
     return UserEntity.findOne({ email }).exec();
   }
 
-  public async create(userData: Partial<UserModel>): Promise<UserModel> {
-    const user = new UserEntity(userData);
+  public async create(dto: CreateUserDto): Promise<UserModel> {
+    const user = new UserEntity(dto);
     return user.save();
+  }
+
+  public async findOrCreate(userData: Partial<UserModel>): Promise<UserModel> {
+    if (!userData.email) {
+      throw new Error('Email is required');
+    }
+
+    let user = await this.findByEmail(userData.email);
+    if (!user) {
+      user = await this.create(userData as CreateUserDto);
+    }
+    return user;
   }
 }

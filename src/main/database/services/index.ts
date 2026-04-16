@@ -1,4 +1,6 @@
 export * from './database.service.js';
+export * from './database-service.interface.js';
 export * from './user.service.js';
 export * from './offer.service.js';
-export * from './database-service.interface.js';
+export * from './comment.service.js';
+export * from './auth.service.js';
