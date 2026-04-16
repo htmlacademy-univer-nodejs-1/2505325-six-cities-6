@@ -36,7 +36,7 @@ export class CLIApplication {
     const commandKeys = Object.keys(parsedCommand);
     const [commandName] = commandKeys;
     const command = this.getCommand(commandName);
-    
+
     // Collect all arguments including other flags
     const allArguments: string[] = [];
     for (const key of commandKeys) {
@@ -46,7 +46,7 @@ export class CLIApplication {
         allArguments.push(key, ...parsedCommand[key]);
       }
     }
-    
+
     command.execute(...allArguments);
   }
 }

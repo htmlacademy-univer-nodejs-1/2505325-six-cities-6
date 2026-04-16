@@ -14,17 +14,17 @@ export class ImportCommand implements CommandInterface {
 
   private parseArgs(parameters: string[]): { filename?: string; dbUri?: string } {
     const result: { filename?: string; dbUri?: string } = {};
-    
+
     for (let i = 0; i < parameters.length; i++) {
       const param = parameters[i];
-      
+
       if (param === '--db' || param === '--database') {
         result.dbUri = parameters[++i];
       } else if (!param.startsWith('--')) {
         result.filename = param;
       }
     }
-    
+
     return result;
   }
 
@@ -75,13 +75,13 @@ export class ImportCommand implements CommandInterface {
 
         try {
           const offerData = fileReader.parseLine(line);
-          
+
           // Find or create user
           let userId = userCache.get(offerData.author.email);
-          
+
           if (!userId) {
             let user = await UserEntity.findOne({ email: offerData.author.email });
-            
+
             if (!user) {
               user = await UserEntity.create({
                 name: offerData.author.name,
@@ -92,7 +92,7 @@ export class ImportCommand implements CommandInterface {
               });
               logger.info(`Created user: ${offerData.author.email}`);
             }
-            
+
             userId = user._id.toString();
             userCache.set(offerData.author.email, userId);
           }
@@ -145,7 +145,7 @@ export class ImportCommand implements CommandInterface {
 
       console.error(chalk.red(`Can't import data from file: ${filename}`));
       console.error(chalk.redBright(`Details: ${err.message}`));
-      
+
       // Ensure disconnection on error
       try {
         await mongoose.disconnect();
