@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import * as crypto from 'crypto';
+import * as crypto from 'node:crypto';
 import { UserModel, UserEntity } from '../models/user.model.js';
 import { CreateUserDto } from '../../../shared/dto/create-user.dto.js';
 import { LoginDto } from '../../../shared/dto/login.dto.js';
@@ -24,7 +24,7 @@ export class AuthService {
 
   public async register(dto: CreateUserDto): Promise<UserModel> {
     const existingUser = await UserEntity.findOne({ email: dto.email }).exec();
-    
+
     if (existingUser) {
       throw new Error('User with this email already exists');
     }
@@ -34,25 +34,25 @@ export class AuthService {
       ...dto,
       password: hashedPassword
     });
-    
+
     return user.save();
   }
 
   public async login(dto: LoginDto): Promise<AuthToken> {
     const user = await UserEntity.findOne({ email: dto.email }).exec();
-    
+
     if (!user) {
       throw new Error('Invalid email or password');
     }
 
     const isValid = this.verifyPassword(dto.password, user.password);
-    
+
     if (!isValid) {
       throw new Error('Invalid email or password');
     }
 
     const token = this.generateToken(user._id.toString());
-    
+
     return {
       token,
       userId: user._id.toString()
@@ -65,7 +65,7 @@ export class AuthService {
       if (!decoded) {
         return null;
       }
-      
+
       return UserEntity.findById(decoded.userId).exec();
     } catch {
       return null;
@@ -83,10 +83,10 @@ export class AuthService {
     try {
       const decoded = Buffer.from(token, 'base64').toString('utf-8');
       const [userId, timestamp, secret, signature] = decoded.split(':');
-      
+
       const data = `${userId}:${timestamp}:${secret}`;
       const expectedSignature = crypto.createHmac('sha256', secret).update(data).digest('hex');
-      
+
       if (signature !== expectedSignature) {
         return null;
       }

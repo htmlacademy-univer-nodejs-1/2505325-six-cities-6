@@ -9,7 +9,7 @@ export class OfferService implements OfferServiceInterface {
   public async findById(id: string): Promise<OfferModel | null> {
     return OfferEntity.findById(id).exec();
   }
-  
+
   public async findAll(limit = 60): Promise<OfferModel[]> {
     return OfferEntity.find().sort({ createdAt: -1 }).limit(limit).exec();
   }
@@ -81,7 +81,7 @@ export class OfferService implements OfferServiceInterface {
 
     const totalRating = comments.reduce((sum: number, comment: { rating: number }) => sum + comment.rating, 0);
     const averageRating = Number((totalRating / comments.length).toFixed(1));
-    
+
     await OfferEntity.findByIdAndUpdate(offerId, { rating: averageRating }).exec();
   }
 }
