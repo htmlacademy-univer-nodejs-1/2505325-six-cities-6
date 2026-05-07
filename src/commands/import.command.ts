@@ -5,9 +5,13 @@ import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import mongoose from 'mongoose';
 import { UserEntity, OfferEntity } from '../main/database/models/index.js';
-import { logger } from '../main/app/logger.js';
+import { Logger } from 'pino';
+import { inject, injectable } from '@inversifyjs/core';
 
+@injectable()
 export class ImportCommand implements CommandInterface {
+  constructor(@inject('Logger') private readonly logger: Logger) {}
+
   public getName(): string {
     return '--import';
   }
@@ -43,9 +47,9 @@ export class ImportCommand implements CommandInterface {
 
     try {
       // Connect to database
-      logger.info(`Connecting to database: ${dbUri}`);
+      this.logger.info(`Connecting to database: ${dbUri}`);
       await mongoose.connect(dbUri);
-      logger.info('Successfully connected to database');
+      this.logger.info('Successfully connected to database');
 
       const fileReader = new TSVFileReader(filename.trim());
 
@@ -90,7 +94,7 @@ export class ImportCommand implements CommandInterface {
                 password: offerData.author.password,
                 type: offerData.author.type
               });
-              logger.info(`Created user: ${offerData.author.email}`);
+              this.logger.info(`Created user: ${offerData.author.email}`);
             }
 
             userId = user._id.toString();
@@ -137,7 +141,7 @@ export class ImportCommand implements CommandInterface {
 
       // Disconnect from database
       await mongoose.disconnect();
-      logger.info('Disconnected from database');
+      this.logger.info('Disconnected from database');
     } catch (err) {
       if (!(err instanceof Error)) {
         throw err;

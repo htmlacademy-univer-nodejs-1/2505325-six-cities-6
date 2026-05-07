@@ -1,25 +1,27 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import mongoose from 'mongoose';
-import { logger } from '../../app/logger.js';
 import { DatabaseServiceInterface } from './database-service.interface.js';
+import { Logger } from 'pino';
 
 @injectable()
 export class DatabaseService implements DatabaseServiceInterface {
   private isConnected = false;
 
+  constructor(@inject('Logger') private readonly logger: Logger) {}
+
   public async connect(uri: string): Promise<void> {
     if (this.isConnected) {
-      logger.warn('Database connection already established');
+      this.logger.warn('Database connection already established');
       return;
     }
 
     try {
-      logger.info(`Attempting to connect to database: ${uri}`);
+      this.logger.info(`Attempting to connect to database: ${uri}`);
       await mongoose.connect(uri);
       this.isConnected = true;
-      logger.info('Successfully connected to database');
+      this.logger.info('Successfully connected to database');
     } catch (error) {
-      logger.error(`Failed to connect to database: ${(error as Error).message}`);
+      this.logger.error(`Failed to connect to database: ${(error as Error).message}`);
       throw error;
     }
   }
@@ -32,9 +34,9 @@ export class DatabaseService implements DatabaseServiceInterface {
     try {
       await mongoose.disconnect();
       this.isConnected = false;
-      logger.info('Disconnected from database');
+      this.logger.info('Disconnected from database');
     } catch (error) {
-      logger.error(`Error disconnecting from database: ${(error as Error).message}`);
+      this.logger.error(`Error disconnecting from database: ${(error as Error).message}`);
       throw error;
     }
   }
