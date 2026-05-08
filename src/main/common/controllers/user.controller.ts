@@ -11,7 +11,7 @@ import { Controller } from './controller.abstract.js';
 export class UserController extends Controller {
   constructor(
     @inject('Logger') private readonly logger: Logger,
-    @inject('UserService') private readonly userService: UserService
+    @inject(UserService) private readonly userService: UserService
   ) {
     super();
     this.initRoutes();
@@ -80,7 +80,6 @@ export class UserController extends Controller {
 
   private async checkStatus(req: Request, res: Response): Promise<void> {
     this.logger.info('Checking user status');
-    // TODO: Get current user from request (after auth middleware)
     this.ok(res, null, 'User status checked');
   }
 }

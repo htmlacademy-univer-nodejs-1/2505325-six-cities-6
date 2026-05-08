@@ -4,6 +4,7 @@ import { logger } from '../app/logger.js';
 import { configSchema } from '../config/index.js';
 import { Application } from '../app/application.js';
 import { DatabaseService, UserService, OfferService } from '../database/index.js';
+import { OfferController, UserController } from '../common/controllers/index.js';
 import { Logger } from 'pino';
 import { CommandInterface } from '../../commands/command.interface.js';
 import { HelpCommand } from '../../commands/help.command.js';
@@ -19,6 +20,8 @@ container.bind('Config').toConstantValue(configSchema);
 container.bind(DatabaseService).toSelf();
 container.bind(UserService).toSelf();
 container.bind(OfferService).toSelf();
+container.bind(UserController).toSelf();
+container.bind(OfferController).toSelf();
 
 container.bind<CommandInterface>('HelpCommand').to(HelpCommand);
 container.bind<CommandInterface>('VersionCommand').to(VersionCommand);

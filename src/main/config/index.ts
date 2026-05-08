@@ -35,6 +35,18 @@ const configSchema = convict({
     env: 'SALT',
     default: 'default-salt-value',
   },
+  dbUser: {
+    doc: 'Database user',
+    format: String,
+    env: 'DB_USER',
+    default: 'admin',
+  },
+  dbPassword: {
+    doc: 'Database password',
+    format: String,
+    env: 'DB_PASSWORD',
+    default: 'test',
+  },
 });
 
 configSchema.validate({ allowed: 'strict' });
