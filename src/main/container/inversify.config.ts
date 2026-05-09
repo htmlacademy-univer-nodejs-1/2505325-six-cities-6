@@ -5,6 +5,7 @@ import { configSchema } from '../config/index.js';
 import { Application } from '../app/application.js';
 import { DatabaseService, UserService, OfferService } from '../database/index.js';
 import { OfferController, UserController } from '../common/controllers/index.js';
+import { ExceptionFilter } from '../common/filters/exception-filter.js';
 import { Logger } from 'pino';
 import { CommandInterface } from '../../commands/command.interface.js';
 import { HelpCommand } from '../../commands/help.command.js';
@@ -17,6 +18,7 @@ const container = new Container();
 container.bind<Logger>('Logger').toConstantValue(logger);
 container.bind('Config').toConstantValue(configSchema);
 
+container.bind(ExceptionFilter).toSelf();
 container.bind(DatabaseService).toSelf();
 container.bind(UserService).toSelf();
 container.bind(OfferService).toSelf();

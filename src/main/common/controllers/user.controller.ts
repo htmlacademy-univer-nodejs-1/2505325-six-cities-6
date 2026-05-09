@@ -45,9 +45,9 @@ export class UserController extends Controller {
 
   private async create(req: Request, res: Response): Promise<void> {
     const dto = plainToInstance(CreateUserDto, req.body, {
-          excludeExtraneousValues: true,
-          enableImplicitConversion: true,
-        });
+      excludeExtraneousValues: true,
+      enableImplicitConversion: true,
+    });
 
     this.logger.info('Creating new user with email:', dto.email);
 
@@ -57,15 +57,14 @@ export class UserController extends Controller {
 
   private async login(req: Request, res: Response): Promise<void> {
     const dto = plainToInstance(LoginDto, req.body, {
-          excludeExtraneousValues: true,
-          enableImplicitConversion: true,
-        });
+      excludeExtraneousValues: true,
+      enableImplicitConversion: true,
+    });
     this.logger.info('User login attempt with email:', dto.email);
 
     const user = await this.userService.findByEmail(dto.email);
     if (!user) {
-      this.notFound(res, 'User not found');
-      return;
+      this.notFound('User not found');
     }
 
     // TODO: Add password verification and token generation

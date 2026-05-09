@@ -2,8 +2,8 @@ import { Expose } from 'class-transformer';
 
 export class LoginDto {
   @Expose()
-  email!: string;
+    email!: string;
 
   @Expose()
-  password!: string;
+    password!: string;
 }

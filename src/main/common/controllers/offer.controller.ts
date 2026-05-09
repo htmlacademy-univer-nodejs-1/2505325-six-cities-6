@@ -81,7 +81,7 @@ export class OfferController extends Controller {
   private async create(req: Request, res: Response): Promise<void> {
     const dto = this.transformToDto(CreateOfferDto, req.body);
     this.logger.info('Creating new offer with title:', dto.title);
-    
+
     const offer = await this.offerService.create(dto);
     this.created(res, offer, 'Offer created successfully');
   }
@@ -89,13 +89,12 @@ export class OfferController extends Controller {
   private async findById(req: Request, res: Response): Promise<void> {
     const id = req.params.id as string;
     this.logger.info('Getting offer by id:', id);
-    
+
     const offer = await this.offerService.findById(id);
     if (!offer) {
-      this.notFound(res, 'Offer not found');
-      return;
+      this.notFound('Offer not found');
     }
-    
+
     this.ok(res, offer, 'Offer retrieved successfully');
   }
 
@@ -103,33 +102,31 @@ export class OfferController extends Controller {
     const id = req.params.id as string;
     const dto = this.transformToDto(UpdateOfferDto, req.body);
     this.logger.info('Updating offer with id:', id);
-    
+
     const offer = await this.offerService.updateById(id, dto);
     if (!offer) {
-      this.notFound(res, 'Offer not found');
-      return;
+      this.notFound('Offer not found');
     }
-    
+
     this.ok(res, offer, 'Offer updated successfully');
   }
 
   private async delete(req: Request, res: Response): Promise<void> {
     const id = req.params.id as string;
     this.logger.info('Deleting offer with id:', id);
-    
+
     const deleted = await this.offerService.deleteById(id);
     if (!deleted) {
-      this.notFound(res, 'Offer not found');
-      return;
+      this.notFound('Offer not found');
     }
-    
+
     this.noContent(res);
   }
 
   private async findPremiumByCity(req: Request, res: Response): Promise<void> {
     const city = req.params.city as string;
     this.logger.info('Getting premium offers for city:', city);
-    
+
     const offers = await this.offerService.findPremiumByCity(city);
     this.ok(res, offers, 'Premium offers retrieved successfully');
   }
@@ -137,7 +134,7 @@ export class OfferController extends Controller {
   private async findFavorites(req: Request, res: Response): Promise<void> {
     const userId = ((req as any).user)?._id || 'default-user-id';
     this.logger.info('Getting favorite offers for user:', userId);
-    
+
     const offers = await this.offerService.findFavorites(userId);
     this.ok(res, offers, 'Favorite offers retrieved successfully');
   }
@@ -146,13 +143,13 @@ export class OfferController extends Controller {
     const offerId = req.params.id as string;
     const userId = ((req as any).user)?._id || 'default-user-id';
     this.logger.info('Adding offer to favorites:', offerId, 'for user:', userId);
-    
+
     const offer = await this.offerService.addToFavorites(offerId, userId);
     if (!offer) {
-      this.notFound(res, 'Offer not found');
+      this.notFound('Offer not found');
       return;
     }
-    
+
     this.ok(res, offer, 'Offer added to favorites');
   }
 
@@ -160,13 +157,13 @@ export class OfferController extends Controller {
     const offerId = req.params.id as string;
     const userId = ((req as any).user)?._id || 'default-user-id';
     this.logger.info('Removing offer from favorites:', offerId, 'for user:', userId);
-    
+
     const offer = await this.offerService.removeFromFavorites(offerId, userId);
     if (!offer) {
-      this.notFound(res, 'Offer not found');
+      this.notFound('Offer not found');
       return;
     }
-    
+
     this.ok(res, offer, 'Offer removed from favorites');
   }
 }

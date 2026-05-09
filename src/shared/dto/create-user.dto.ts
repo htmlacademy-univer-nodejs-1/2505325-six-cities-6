@@ -2,14 +2,14 @@ import { Expose } from 'class-transformer';
 
 export class CreateUserDto {
   @Expose()
-  name!: string;
+    name!: string;
 
   @Expose()
-  email!: string;
+    email!: string;
 
   @Expose()
-  password!: string;
+    password!: string;
 
   @Expose()
-  type!: 'default' | 'pro';
+    type!: 'default' | 'pro';
 }

@@ -2,14 +2,14 @@ import { Expose } from 'class-transformer';
 
 export class CreateCommentDto {
   @Expose()
-  text!: string;
+    text!: string;
 
   @Expose()
-  rating!: number;
+    rating!: number;
 
   @Expose()
-  author!: string;
+    author!: string;
 
   @Expose()
-  offer!: string;
+    offer!: string;
 }

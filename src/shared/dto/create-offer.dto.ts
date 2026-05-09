@@ -4,105 +4,105 @@ import { AmenitiesType } from '../models/amentities.type.js';
 
 export class CoordinatesDto {
   @Expose()
-  latitude!: number;
+    latitude!: number;
 
   @Expose()
-  longitude!: number;
+    longitude!: number;
 }
 
 export class CreateOfferDto {
   @Expose()
-  title!: string;
+    title!: string;
 
   @Expose()
-  description!: string;
+    description!: string;
 
   @Expose()
-  publishDate!: Date;
+    publishDate!: Date;
 
   @Expose()
-  city!: string;
+    city!: string;
 
   @Expose()
-  previewImage!: string;
+    previewImage!: string;
 
   @Expose()
-  photos!: string[];
+    photos!: string[];
 
   @Expose()
-  isPremium!: boolean;
+    isPremium!: boolean;
 
   @Expose()
-  isFavorite!: boolean;
+    isFavorite!: boolean;
 
   @Expose()
-  rating!: number;
+    rating!: number;
 
   @Expose()
-  type!: HouseType;
+    type!: HouseType;
 
   @Expose()
-  rooms!: number;
+    rooms!: number;
 
   @Expose()
-  guests!: number;
+    guests!: number;
 
   @Expose()
-  price!: number;
+    price!: number;
 
   @Expose()
-  amenities!: AmenitiesType[];
+    amenities!: AmenitiesType[];
 
   @Expose()
-  author!: string;
+    author!: string;
 
   @Expose()
-  coordinates!: CoordinatesDto;
+    coordinates!: CoordinatesDto;
 }
 
 export class UpdateOfferDto {
   @Expose()
-  title?: string;
+    title?: string;
 
   @Expose()
-  description?: string;
+    description?: string;
 
   @Expose()
-  publishDate?: Date;
+    publishDate?: Date;
 
   @Expose()
-  city?: string;
+    city?: string;
 
   @Expose()
-  previewImage?: string;
+    previewImage?: string;
 
   @Expose()
-  photos?: string[];
+    photos?: string[];
 
   @Expose()
-  isPremium?: boolean;
+    isPremium?: boolean;
 
   @Expose()
-  isFavorite?: boolean;
+    isFavorite?: boolean;
 
   @Expose()
-  rating?: number;
+    rating?: number;
 
   @Expose()
-  type?: HouseType;
+    type?: HouseType;
 
   @Expose()
-  rooms?: number;
+    rooms?: number;
 
   @Expose()
-  guests?: number;
+    guests?: number;
 
   @Expose()
-  price?: number;
+    price?: number;
 
   @Expose()
-  amenities?: AmenitiesType[];
+    amenities?: AmenitiesType[];
 
   @Expose()
-  coordinates?: CoordinatesDto;
+    coordinates?: CoordinatesDto;
 }

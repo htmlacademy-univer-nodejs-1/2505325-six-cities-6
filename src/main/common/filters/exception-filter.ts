@@ -13,31 +13,31 @@ export class HttpError extends Error {
 }
 
 export class NotFoundError extends HttpError {
-  constructor(message: string = 'Not Found') {
+  constructor(message = 'Not Found') {
     super(StatusCodes.NOT_FOUND, message);
   }
 }
 
 export class BadRequestError extends HttpError {
-  constructor(message: string = 'Bad Request') {
+  constructor(message = 'Bad Request') {
     super(StatusCodes.BAD_REQUEST, message);
   }
 }
 
 export class UnauthorizedError extends HttpError {
-  constructor(message: string = 'Unauthorized') {
+  constructor(message = 'Unauthorized') {
     super(StatusCodes.UNAUTHORIZED, message);
   }
 }
 
 export class ForbiddenError extends HttpError {
-  constructor(message: string = 'Forbidden') {
+  constructor(message = 'Forbidden') {
     super(StatusCodes.FORBIDDEN, message);
   }
 }
 
 export class ConflictError extends HttpError {
-  constructor(message: string = 'Conflict') {
+  constructor(message = 'Conflict') {
     super(StatusCodes.CONFLICT, message);
   }
 }
