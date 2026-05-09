@@ -2,7 +2,9 @@ import { CommandInterface } from '../command.interface.js';
 import chalk from 'chalk';
 import { fetchMockData, OfferGenerator } from './offer-generator.js';
 import { TSVFileWriter } from '../../shared/libs/index.js';
+import { injectable } from 'inversify';
 
+@injectable()
 export class GenerateCommand implements CommandInterface {
   public getName(): string {
     return '--generate';

@@ -1,7 +1,15 @@
-export interface CreateUserDto {
-  name: string;
-  email: string;
-  avatar?: string;
-  password: string;
-  type: 'default' | 'pro';
+import { Expose } from 'class-transformer';
+
+export class CreateUserDto {
+  @Expose()
+    name!: string;
+
+  @Expose()
+    email!: string;
+
+  @Expose()
+    password!: string;
+
+  @Expose()
+    type!: 'default' | 'pro';
 }

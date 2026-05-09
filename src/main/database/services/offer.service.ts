@@ -1,6 +1,7 @@
 import { injectable } from 'inversify';
 import { OfferModel, OfferEntity } from '../models/offer.model.js';
 import { Types } from 'mongoose';
+import { CommentEntity } from '../models/comment.model.js';
 import { OfferServiceInterface } from './database-service.interface.js';
 import { CreateOfferDto, UpdateOfferDto } from '../../../shared/dto/create-offer.dto.js';
 
@@ -24,10 +25,8 @@ export class OfferService implements OfferServiceInterface {
   }
 
   public async deleteById(id: string): Promise<boolean> {
-    const CommentEntity = (await import('../models/comment.model.js')).CommentEntity;
-    
     await CommentEntity.deleteMany({ offer: new Types.ObjectId(id) }).exec();
-    
+
     const result = await OfferEntity.findByIdAndDelete(id).exec();
     return result !== null;
   }
@@ -46,7 +45,7 @@ export class OfferService implements OfferServiceInterface {
   public async addToFavorites(offerId: string, userId: string): Promise<OfferModel | null> {
     return OfferEntity.findByIdAndUpdate(
       offerId,
-      { 
+      {
         $addToSet: { favoriteUsers: new Types.ObjectId(userId) }
       },
       { new: true }
@@ -56,7 +55,7 @@ export class OfferService implements OfferServiceInterface {
   public async removeFromFavorites(offerId: string, userId: string): Promise<OfferModel | null> {
     return OfferEntity.findByIdAndUpdate(
       offerId,
-      { 
+      {
         $pull: { favoriteUsers: new Types.ObjectId(userId) }
       },
       { new: true }
@@ -71,9 +70,8 @@ export class OfferService implements OfferServiceInterface {
   }
 
   public async calculateRating(offerId: string): Promise<void> {
-    const CommentEntity = (await import('../models/comment.model.js')).CommentEntity;
     const comments = await CommentEntity.find({ offer: new Types.ObjectId(offerId) }).exec();
-    
+
     if (comments.length === 0) {
       await OfferEntity.findByIdAndUpdate(offerId, { rating: 0 }).exec();
       return;

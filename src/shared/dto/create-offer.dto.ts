@@ -1,28 +1,108 @@
+import { Expose } from 'class-transformer';
 import { HouseType } from '../models/house.type.js';
 import { AmenitiesType } from '../models/amentities.type.js';
 
-export interface CoordinatesDto {
-  latitude: number;
-  longitude: number;
+export class CoordinatesDto {
+  @Expose()
+    latitude!: number;
+
+  @Expose()
+    longitude!: number;
 }
 
-export interface CreateOfferDto {
-  title: string;
-  description: string;
-  publishDate: Date;
-  city: string;
-  previewImage: string;
-  photos: string[];
-  isPremium: boolean;
-  isFavorite: boolean;
-  rating: number;
-  type: HouseType;
-  rooms: number;
-  guests: number;
-  price: number;
-  amenities: AmenitiesType[];
-  author: string;
-  coordinates: CoordinatesDto;
+export class CreateOfferDto {
+  @Expose()
+    title!: string;
+
+  @Expose()
+    description!: string;
+
+  @Expose()
+    publishDate!: Date;
+
+  @Expose()
+    city!: string;
+
+  @Expose()
+    previewImage!: string;
+
+  @Expose()
+    photos!: string[];
+
+  @Expose()
+    isPremium!: boolean;
+
+  @Expose()
+    isFavorite!: boolean;
+
+  @Expose()
+    rating!: number;
+
+  @Expose()
+    type!: HouseType;
+
+  @Expose()
+    rooms!: number;
+
+  @Expose()
+    guests!: number;
+
+  @Expose()
+    price!: number;
+
+  @Expose()
+    amenities!: AmenitiesType[];
+
+  @Expose()
+    author!: string;
+
+  @Expose()
+    coordinates!: CoordinatesDto;
 }
 
-export interface UpdateOfferDto extends Partial<Omit<CreateOfferDto, 'author'>> {}
+export class UpdateOfferDto {
+  @Expose()
+    title?: string;
+
+  @Expose()
+    description?: string;
+
+  @Expose()
+    publishDate?: Date;
+
+  @Expose()
+    city?: string;
+
+  @Expose()
+    previewImage?: string;
+
+  @Expose()
+    photos?: string[];
+
+  @Expose()
+    isPremium?: boolean;
+
+  @Expose()
+    isFavorite?: boolean;
+
+  @Expose()
+    rating?: number;
+
+  @Expose()
+    type?: HouseType;
+
+  @Expose()
+    rooms?: number;
+
+  @Expose()
+    guests?: number;
+
+  @Expose()
+    price?: number;
+
+  @Expose()
+    amenities?: AmenitiesType[];
+
+  @Expose()
+    coordinates?: CoordinatesDto;
+}
