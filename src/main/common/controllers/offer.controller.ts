@@ -5,6 +5,7 @@ import { Logger } from 'pino';
 import { OfferService } from '../../database/index.js';
 import { CreateOfferDto, UpdateOfferDto } from '../../../shared/dto/create-offer.dto.js';
 import { Controller } from './controller.abstract.js';
+import { ValidateObjectIdMiddleware, ValidateDtoMiddleware } from '../../common/middlewares/index.js';
 
 @injectable()
 export class OfferController extends Controller {
@@ -17,6 +18,10 @@ export class OfferController extends Controller {
   }
 
   private initRoutes(): void {
+    const validateObjectId = new ValidateObjectIdMiddleware('id').execute;
+    const validateCreateOfferDto = new ValidateDtoMiddleware(CreateOfferDto).execute;
+    const validateUpdateOfferDto = new ValidateDtoMiddleware(UpdateOfferDto).execute;
+
     this.addRoute({
       path: '/offers',
       method: 'get',
@@ -27,24 +32,28 @@ export class OfferController extends Controller {
       path: '/offers',
       method: 'post',
       handler: asyncHandler(this.create.bind(this)),
+      middlewares: [validateCreateOfferDto],
     });
 
     this.addRoute({
       path: '/offers/:id',
       method: 'get',
       handler: asyncHandler(this.findById.bind(this)),
+      middlewares: [validateObjectId],
     });
 
     this.addRoute({
       path: '/offers/:id',
       method: 'patch',
       handler: asyncHandler(this.update.bind(this)),
+      middlewares: [validateObjectId, validateUpdateOfferDto],
     });
 
     this.addRoute({
       path: '/offers/:id',
       method: 'delete',
       handler: asyncHandler(this.delete.bind(this)),
+      middlewares: [validateObjectId],
     });
 
     this.addRoute({
@@ -63,12 +72,14 @@ export class OfferController extends Controller {
       path: '/offers/favorites/:id',
       method: 'post',
       handler: asyncHandler(this.addToFavorites.bind(this)),
+      middlewares: [validateObjectId],
     });
 
     this.addRoute({
       path: '/offers/favorites/:id',
       method: 'delete',
       handler: asyncHandler(this.removeFromFavorites.bind(this)),
+      middlewares: [validateObjectId],
     });
   }
 
@@ -79,10 +90,9 @@ export class OfferController extends Controller {
   }
 
   private async create(req: Request, res: Response): Promise<void> {
-    const dto = this.transformToDto(CreateOfferDto, req.body);
-    this.logger.info('Creating new offer with title:', dto.title);
+    this.logger.info('Creating new offer with title:', req.body.title);
 
-    const offer = await this.offerService.create(dto);
+    const offer = await this.offerService.create(req.body);
     this.created(res, offer, 'Offer created successfully');
   }
 
@@ -100,10 +110,9 @@ export class OfferController extends Controller {
 
   private async update(req: Request, res: Response): Promise<void> {
     const id = req.params.id as string;
-    const dto = this.transformToDto(UpdateOfferDto, req.body);
     this.logger.info('Updating offer with id:', id);
 
-    const offer = await this.offerService.updateById(id, dto);
+    const offer = await this.offerService.updateById(id, req.body);
     if (!offer) {
       this.notFound('Offer not found');
     }

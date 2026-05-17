@@ -4,6 +4,7 @@ export interface IRoute {
   path: string;
   method: 'get' | 'post' | 'patch' | 'delete' | 'put';
   handler: RequestHandler;
+  middlewares?: RequestHandler[]
 }
 
 export interface IController {

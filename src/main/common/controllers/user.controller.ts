@@ -4,8 +4,8 @@ import asyncHandler from 'express-async-handler';
 import { Logger } from 'pino';
 import { UserService } from '../../database/index.js';
 import { CreateUserDto, LoginDto } from '../../../shared/dto/index.js';
-import { plainToInstance } from 'class-transformer';
 import { Controller } from './controller.abstract.js';
+import { ValidateDtoMiddleware } from '../../common/middlewares/index.js';
 
 @injectable()
 export class UserController extends Controller {
@@ -18,16 +18,21 @@ export class UserController extends Controller {
   }
 
   private initRoutes(): void {
+    const validateCreateUserDto = new ValidateDtoMiddleware(CreateUserDto).execute;
+    const validateLoginDto = new ValidateDtoMiddleware(LoginDto).execute;
+
     this.addRoute({
       path: '/users',
       method: 'post',
       handler: asyncHandler(this.create.bind(this)),
+      middlewares: [validateCreateUserDto],
     });
 
     this.addRoute({
       path: '/login',
       method: 'post',
       handler: asyncHandler(this.login.bind(this)),
+      middlewares: [validateLoginDto],
     });
 
     this.addRoute({
@@ -44,25 +49,16 @@ export class UserController extends Controller {
   }
 
   private async create(req: Request, res: Response): Promise<void> {
-    const dto = plainToInstance(CreateUserDto, req.body, {
-      excludeExtraneousValues: true,
-      enableImplicitConversion: true,
-    });
+    this.logger.info('Creating new user with email:', req.body.email);
 
-    this.logger.info('Creating new user with email:', dto.email);
-
-    const user = await this.userService.create(dto);
+    const user = await this.userService.create(req.body);
     this.created(res, user, 'User created successfully');
   }
 
   private async login(req: Request, res: Response): Promise<void> {
-    const dto = plainToInstance(LoginDto, req.body, {
-      excludeExtraneousValues: true,
-      enableImplicitConversion: true,
-    });
-    this.logger.info('User login attempt with email:', dto.email);
+    this.logger.info('User login attempt with email:', req.body.email);
 
-    const user = await this.userService.findByEmail(dto.email);
+    const user = await this.userService.findByEmail(req.body.email);
     if (!user) {
       this.notFound('User not found');
     }

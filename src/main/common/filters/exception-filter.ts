@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Logger } from 'pino';
+import { inject, injectable } from 'inversify';
 
 export class HttpError extends Error {
   constructor(
@@ -42,8 +43,10 @@ export class ConflictError extends HttpError {
   }
 }
 
+@injectable()
 export class ExceptionFilter {
-  constructor(private readonly logger: Logger) {}
+  constructor(
+    @inject('Logger') private readonly logger: Logger) {}
 
   public catch(err: Error, req: Request, res: Response, next: NextFunction): void {
     if (err instanceof HttpError) {
