@@ -18,7 +18,8 @@ export abstract class Controller implements IController {
   }
 
   public addRoute(route: IRoute): void {
-    this._router[route.method](route.path, route.handler);
+    const middlewares = route.middlewares || [];
+    this._router[route.method](route.path,... middlewares , route.handler);
   }
 
   protected transformToDto<T extends object>(dtoClass: new () => T, plainObject: unknown): T {

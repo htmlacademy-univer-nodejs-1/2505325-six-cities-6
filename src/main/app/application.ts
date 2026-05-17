@@ -5,6 +5,7 @@ import express, { Application as ExpressApp, ErrorRequestHandler } from 'express
 import { OfferController, UserController } from '../common/controllers/index.js';
 import { DatabaseService } from '../database/index.js';
 import { ExceptionFilter } from '../common/filters/exception-filter.js';
+import { CommentController } from '../common/controllers/comment.controller.js';
 
 @injectable()
 class Application {
@@ -14,6 +15,7 @@ class Application {
     @inject('Logger') private readonly logger: Logger,
     @inject(OfferController) private readonly offerController: OfferController,
     @inject(UserController) private readonly userController: UserController,
+    @inject(CommentController) private readonly commentContholler: CommentController,
     @inject(DatabaseService) private readonly databaseService: DatabaseService,
     @inject(ExceptionFilter) private readonly exceptionFilter: ExceptionFilter
   ) {
@@ -36,6 +38,7 @@ class Application {
   public registerRoutes(): void {
     this.expressApp.use('/api', this.offerController.router);
     this.expressApp.use('/api', this.userController.router);
+    this.expressApp.use('/api', this.commentContholler.router);
   }
 
   public async init(): Promise<void> {
