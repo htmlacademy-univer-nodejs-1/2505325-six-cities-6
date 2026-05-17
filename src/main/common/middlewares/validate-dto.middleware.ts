@@ -4,14 +4,6 @@ import { validate, ValidationError } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { IMiddleware } from '../interfaces/middleware.interface.js';
 
-declare global {
-  namespace Express {
-    interface Request {
-      validatedDto?: unknown;
-    }
-  }
-}
-
 export class ValidateDtoMiddleware implements IMiddleware {
   private readonly dtoClass: new () => object;
 
@@ -37,7 +29,6 @@ export class ValidateDtoMiddleware implements IMiddleware {
       return;
     }
 
-    req.validatedDto = dtoInstance;
     req.body = dtoInstance;
 
     next();

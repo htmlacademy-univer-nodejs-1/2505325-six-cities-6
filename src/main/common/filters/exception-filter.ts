@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Logger } from 'pino';
-import { inject, injectable } from 'inversify'
+import { inject, injectable } from 'inversify';
 
 export class HttpError extends Error {
   constructor(

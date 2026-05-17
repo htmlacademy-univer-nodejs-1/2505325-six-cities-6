@@ -1,62 +1,62 @@
-import { Controller } from "./controller.abstract.js";
-import { inject, injectable } from "inversify";
+import { Controller } from './controller.abstract.js';
+import { inject, injectable } from 'inversify';
 import expressAsyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
-import { CommentService, OfferService } from "../../database/index.js";
-import { Logger } from "pino";
-import { CreateCommentDto } from "../../../shared/dto/create-comment.dto.js";
-import { ValidateObjectIdMiddleware } from "../middlewares/index.js";
+import { CommentService, OfferService } from '../../database/index.js';
+import { Logger } from 'pino';
+import { CreateCommentDto } from '../../../shared/dto/create-comment.dto.js';
+import { ValidateObjectIdMiddleware } from '../middlewares/index.js';
 
 @injectable()
-export class CommentController extends Controller{    
-    constructor(
+export class CommentController extends Controller{
+  constructor(
         @inject('Logger') private readonly logger: Logger,
         @inject(CommentService) private readonly commentService: CommentService,
         @inject(OfferService) private readonly offerService: OfferService
-    ) {
-        super();
-        this.initRoutes();
-    }
+  ) {
+    super();
+    this.initRoutes();
+  }
 
-    initRoutes() {
-        const validateObjectId = new ValidateObjectIdMiddleware('id').execute;
-        
-        this.addRoute({
-            path: '/offers/:id/comment',
-            method: 'get',
-            handler: expressAsyncHandler(this.index.bind(this)),
-            middlewares: [validateObjectId]
-        })
+  initRoutes() {
+    const validateObjectId = new ValidateObjectIdMiddleware('id').execute;
 
-        this.addRoute({
-            path: '/offers/:id/comment',
-            method: 'post',
-            handler: expressAsyncHandler(this.create.bind(this)),
-            middlewares: [validateObjectId]
-        })
-    }
+    this.addRoute({
+      path: '/offers/:id/comment',
+      method: 'get',
+      handler: expressAsyncHandler(this.index.bind(this)),
+      middlewares: [validateObjectId]
+    });
 
-    private async create(req: Request, res: Response){
-        const offerId =  req.params.id as string;
-        const dto = this.transformToDto(CreateCommentDto, req.body)
+    this.addRoute({
+      path: '/offers/:id/comment',
+      method: 'post',
+      handler: expressAsyncHandler(this.create.bind(this)),
+      middlewares: [validateObjectId]
+    });
+  }
 
-        dto.offer = offerId;
+  private async create(req: Request, res: Response){
+    const offerId = req.params.id as string;
+    const dto = this.transformToDto(CreateCommentDto, req.body);
 
-        this.logger.info('New comment for offer:', offerId)
-        
-        const comment = await this.commentService.create(dto);
+    dto.offer = offerId;
 
-        await this.offerService.incrementCommentCount(offerId);
-        await this.offerService.calculateRating(offerId);
+    this.logger.info('New comment for offer:', offerId);
 
-        this.created(res, comment, 'Comment created successfully')
-        }
+    const comment = await this.commentService.create(dto);
 
-    private async index(req: Request, res: Response){
-        const offerId = req.params.id as string;
-        this.logger.info('Getting comments for offer:', offerId)
+    await this.offerService.incrementCommentCount(offerId);
+    await this.offerService.calculateRating(offerId);
 
-        const comment = await this.commentService.findByOfferId(offerId);
-        this.ok(res, comment, 'Comment found successfully')
-    }
+    this.created(res, comment, 'Comment created successfully');
+  }
+
+  private async index(req: Request, res: Response){
+    const offerId = req.params.id as string;
+    this.logger.info('Getting comments for offer:', offerId);
+
+    const comment = await this.commentService.findByOfferId(offerId);
+    this.ok(res, comment, 'Comment found successfully');
+  }
 }
